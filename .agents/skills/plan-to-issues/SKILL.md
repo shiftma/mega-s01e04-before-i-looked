@@ -15,11 +15,12 @@ in a shell this agent can run.
    One issue per unit of work.
 3. **Stop and show the table to the human.** Publish nothing until they approve it.
 4. Ask the human what every issue here must carry (fields, labels, wording), unless it is
-   already written down in this session or in the repo.
+   already written down in this session or in the repo. It is: see "What every issue carries".
+   Ask only about anything more.
 5. Create each issue in dependency order, so blocked-by can cite real numbers:
 
    ```sh
-   gh issue create --title "<title>" --body-file <tmp.md>
+   gh issue create --title "<title>" --body-file <tmp.md> --label plan:<plan>
    ```
 
 6. Record every issue URL from gh's output (not from memory) and reply with the list.
@@ -29,6 +30,37 @@ Closing one, with the closing comment from AGENTS.md:
 ```sh
 gh issue close <n> -c "<closing comment>"
 ```
+
+A `closes #n` commit pushed to the default branch closes the issue with no closing comment: add
+it right after the push (`gh issue comment <n>`).
+
+## What every issue carries
+
+Set by a human on 2026-10-30 (plan morning-digest). The reviewer sorts issues by the first line
+and the label, so both are exact.
+
+- Label `plan:<plan>`, the `plan:` value from `plan.md`'s frontmatter (create it once with
+  `gh label create`).
+- Body, in this order:
+
+  ```md
+  Source: plan.md § <n>
+
+  ## Scope
+  <what this issue changes, and what it must not touch>
+
+  ## Done when
+  <the plan's "Done when", word for word>
+
+  ## Blocked by
+  <#n, #m, or —; name a person when it waits on one, e.g. "the reviewer's review">
+
+  ## Model
+  <strongest | cheaper | —>
+  ```
+
+`§ <n>` is the plan's section number as written: `1`, `2a`, `3`. Two issues from one section both
+cite it.
 
 ## No `gh`
 
